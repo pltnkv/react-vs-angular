@@ -1,10 +1,6 @@
-let angular = require('angular')
 let CerebralController = require('cerebral')
 let Model = require('cerebral-model-baobab')
-let React = require('react')
-let cerebralViewReact = require('cerebral-view-react')
 let cerebralDebugger = require('cerebral-module-devtools')
-require('cerebral-view-angular')
 
 let itemsGenerator = require('itemsGenerator')
 
@@ -22,7 +18,7 @@ let data = {
 let model = Model(data)
 var controller = CerebralController(model)
 controller.addModules({
-	devtools: cerebralDebugger()
+	// devtools: cerebralDebugger()
 });
 
 ////////////////////////////////////
@@ -64,24 +60,36 @@ function toggleItemSelection({input, state}) {
 controller.addSignals({
 	randomItemToggled: [getRandomId, toggleItemSelection],
 	itemClicked: [toggleItemSelection],
-	// counterClicked: [incrementCounter]
 	counterClicked: {
 		chain: [incrementCounter],
-		sync: true
+		sync: false
 	}
 });
 
 ////////////////////////////////////
-// ANGULAR
+// VIEWS
 ////////////////////////////////////
 
-angular.module('demo', ['cerebral'])
-	.config(function (cerebralProvider) {
-		cerebralProvider.setController(controller)
-	})
-	.directive('menu', require('angular-views/MenuComponent'))
-	.directive('list', require('angular-views/ListComponent'))
-	.directive('item', require('angular-views/ItemComponent'))
+function getParameterByName(name) {
+	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
+	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		results = regex.exec(location.search)
+	return results == null ? "" : decodeURIComponent(results[1])
+}
 
-angular.bootstrap(document, ['demo']);
+let angularActivator = require('angular-views/activator')
+let reactActivator = require('react-views/activator')
+let renderName = getParameterByName('render')
+
+switch (renderName) {
+	case 'angular':
+		angularActivator.start(controller)
+		break
+	case 'react':
+		reactActivator.start(controller)
+		break
+	default:
+		alert("Please set GET-parameter 'render' to 'angular' or 'react'")
+		break
+}
 

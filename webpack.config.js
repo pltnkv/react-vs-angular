@@ -18,7 +18,10 @@ module.exports = {
 				exclude: /(node_modules|bower_components)/,
 				loader: 'babel',
 				query: {
-					presets: ['es2015']
+					presets: ["react"],
+					plugins: [
+						["transform-decorators-legacy"]
+					]
 				}
 			},
 			{
@@ -31,5 +34,10 @@ module.exports = {
 			}
 		]
 	},
-	devtool: 'cheap-source-map'
+	devtool: 'cheap-source-map',
+	devServer: {
+		port: '8083',
+		contentBase: path.resolve('./out'),
+		hot: true
+	}
 };
