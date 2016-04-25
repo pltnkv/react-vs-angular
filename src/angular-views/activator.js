@@ -13,17 +13,17 @@ function MenuComponent() {
 
 			let intervalId
 
-			$scope.randomTogglingEnabled = false
-			$scope.startRandomToggling = () => {
-				if (!$scope.randomTogglingEnabled) {
+			$scope.testStarted = false
+			$scope.startTest = () => {
+				if (!$scope.testStarted) {
 					intervalId = setInterval(() => {
-						signals.randomItemToggled()
+						signals.nextItemToggled()
 					}, 0)
 				}
-				$scope.randomTogglingEnabled = true
+				$scope.testStarted = true
 			}
-			$scope.stopRandomToggling = () => {
-				$scope.randomTogglingEnabled = false
+			$scope.stopTest = () => {
+				$scope.testStarted = false
 				clearInterval(intervalId)
 			}
 

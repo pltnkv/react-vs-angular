@@ -11,6 +11,7 @@ let items = itemsGenerator.get()
 ////////////////////////////////////
 
 let data = {
+	nextId: 0,
 	counter: 1,
 	items: items
 }
@@ -36,7 +37,14 @@ function getRandomId({state, output}) {
 	output({id})
 }
 
-function toggleItemSelection({input, state}) {
+function getNextItemId({state, output}) {
+	let nextId = state.get('nextId')
+	let items = state.get('items')
+	state.set('nextId', nextId + 1 === items.length ? 0 : nextId + 1)
+	output({id: nextId})
+}
+
+function toggleItem({input, state}) {
 	let itemId = input.id
 	let items = state.get('items')
 	let itemIndex = items.findIndex(item => item.id === itemId)
@@ -58,11 +66,12 @@ function toggleItemSelection({input, state}) {
 ////////////////////////////////////
 
 controller.addSignals({
-	randomItemToggled: [getRandomId, toggleItemSelection],
-	itemClicked: [toggleItemSelection],
+	randomItemToggled: [getRandomId, toggleItem],
+	nextItemToggled: [getNextItemId, toggleItem],
+	itemClicked: [toggleItem],
 	counterClicked: {
 		chain: [incrementCounter],
-		sync: false
+		sync: true
 	}
 });
 

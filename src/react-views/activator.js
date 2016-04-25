@@ -1,6 +1,7 @@
 let React = require('react')
 let ReactDOM = require('react-dom')
 let {Decorator, Container} = require('cerebral-view-react')
+// let Perf = require('react-addons-perf')
 
 @Decorator({
 	counter: ['counter']
@@ -17,33 +18,37 @@ class Menu extends React.Component {
 		};
 	};
 
-	startRandomToggling() {
+	startTest() {
 		this.setState({randomTogglingEnabled: true})
 		if (!this.state.randomTogglingEnabled) {
 			this.intervalId = setInterval(() => {
-				this.props.signals.randomItemToggled()
+				this.props.signals.nextItemToggled()
 			}, 0)
 		}
 	}
 
-	stopRandomToggling() {
+	stopTest() {
 		this.setState({randomTogglingEnabled: false})
 		clearInterval(this.intervalId)
 	}
 
+	onCounterClick() {
+		this.props.signals.counterClicked()
+	}
+
 	render() {
-		const signals = this.props.signals;
 		return (
 			<menu>
+				React:
 				{ this.state.randomTogglingEnabled
-					? <button onClick={() => this.stopRandomToggling()}>Stop random toggling</button>
-					: <button onClick={() => this.startRandomToggling()}>Start random toggling</button> }
-				<button onClick={() => signals.counterClicked()}>Counter = {this.props.counter} </button>
+					? <button onClick={() => this.stopTest()}>Stop test</button>
+					: <button onClick={() => this.startTest()}>Start test</button> }
+				<button onClick={() =>  this.onCounterClick()}>Counter = { this.props.counter } </button>
 			</menu>
 		);
 	}
 }
-
+@Decorator()
 class Item extends React.Component {
 	render() {
 		const signals = this.props.signals;
@@ -64,7 +69,7 @@ class List extends React.Component {
 		const signals = this.props.signals;
 		return (
 			<div>
-				{ this.props.items.map((item) => <Item key={ item.id } item={item} signals={ signals }></Item>) }
+				{ this.props.items.map((item) => <Item key={item.id} item={item}></Item>) }
 			</div>
 		);
 	}
