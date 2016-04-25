@@ -1,2 +1,2 @@
 # react-vs-angular
-Performance comparison test as view layer for Cerebral.js
+Performance comparison test between React and Angular as view layer for Cerebral.js
