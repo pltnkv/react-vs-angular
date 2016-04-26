@@ -67,7 +67,7 @@ function startToggleTest({state}) {
 	state.set('toggleTestRunning', true)
 	let signals = controller.getSignals()
 	let itemsCount = state.get('items').length
-	toggleTest = tests.createTest(signals.nextItemToggled, signals.toggleTestStopped, 100)
+	toggleTest = tests.createTest(signals.nextItemToggled, signals.toggleTestStopped, itemsCount)
 	toggleTest.start()
 }
 
