@@ -3,7 +3,7 @@ module.exports.get = () => {
 	for (let i = 0; i < 1000; i++) {
 		items.push({
 			id: i,
-			text: 't:' + i,
+			text: '' + i,
 			selected: false
 		})
 	}

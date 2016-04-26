@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var NODE_ENV = process.env.NODE_ENV || 'development'
 
 module.exports = {
 	entry: "./src/entry",
@@ -18,7 +19,7 @@ module.exports = {
 				exclude: /(node_modules|bower_components)/,
 				loader: 'babel',
 				query: {
-					presets: ["react"],
+					presets: ["react", "es2015", "stage-0"],
 					plugins: [
 						["transform-decorators-legacy"]
 					]
@@ -37,7 +38,9 @@ module.exports = {
 	devtool: 'cheap-source-map',
 	devServer: {
 		port: '8083',
-		contentBase: path.resolve('./out'),
-		hot: true
-	}
+		contentBase: path.resolve('./out')
+	},
+	plugins: [
+		new webpack.EnvironmentPlugin('NODE_ENV')
+	]
 };
