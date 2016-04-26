@@ -8,23 +8,17 @@ function MenuComponent() {
 		template: require('./menu.html'),
 		controller: function ($scope, state, signals) {
 			state.inject($scope, {
-				counter: ['counter']
+				counter: ['counter'],
+				toggleTestRunning: ['toggleTestRunning']
 			})
 
 			let intervalId
 
-			$scope.testStarted = false
 			$scope.startTest = () => {
-				if (!$scope.testStarted) {
-					intervalId = setInterval(() => {
-						signals.nextItemToggled()
-					}, 0)
-				}
-				$scope.testStarted = true
+				signals.toggleTestStarted()
 			}
 			$scope.stopTest = () => {
-				$scope.testStarted = false
-				clearInterval(intervalId)
+				signals.toggleTestStopped()
 			}
 
 			$scope.onCounterClicked = () => {

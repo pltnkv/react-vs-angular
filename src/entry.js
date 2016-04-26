@@ -1,10 +1,8 @@
 let CerebralController = require('cerebral')
 let Model = require('cerebral-model-baobab')
 let cerebralDebugger = require('cerebral-module-devtools')
-
 let itemsGenerator = require('itemsGenerator')
-
-let items = itemsGenerator.get()
+let tests = require('tests')
 
 ////////////////////////////////////
 // Cerebral
@@ -13,13 +11,14 @@ let items = itemsGenerator.get()
 let data = {
 	nextId: 0,
 	counter: 1,
-	items: items
+	items: itemsGenerator.get(),
+	toggleTestRunning: false
 }
 
 let model = Model(data)
 var controller = CerebralController(model)
 controller.addModules({
-	// devtools: cerebralDebugger()
+	devtools: cerebralDebugger()
 });
 
 ////////////////////////////////////
@@ -61,6 +60,22 @@ function toggleItem({input, state}) {
 	state.set('items', newItems)
 }
 
+// tests
+let toggleTest
+
+function startToggleTest({state}) {
+	state.set('toggleTestRunning', true)
+	let signals = controller.getSignals()
+	let itemsCount = state.get('items').length
+	toggleTest = tests.createTest(signals.nextItemToggled, signals.toggleTestStopped, 100)
+	toggleTest.start()
+}
+
+function stopToggleTest({state}) {
+	state.set('toggleTestRunning', false)
+	toggleTest.stop()
+}
+
 ////////////////////////////////////
 // SIGNALS
 ////////////////////////////////////
@@ -68,6 +83,10 @@ function toggleItem({input, state}) {
 controller.addSignals({
 	randomItemToggled: [getRandomId, toggleItem],
 	nextItemToggled: [getNextItemId, toggleItem],
+	toggleTestStarted: [startToggleTest],
+	toggleTestStopped: [stopToggleTest],
+	shiftTestStarted: [],
+	shiftTestStopped: [],
 	itemClicked: [toggleItem],
 	counterClicked: {
 		chain: [incrementCounter],

@@ -4,48 +4,22 @@ let {Decorator, Container} = require('cerebral-view-react')
 // let Perf = require('react-addons-perf')
 
 @Decorator({
-	counter: ['counter']
+	counter: ['counter'],
+	toggleTestRunning: ['toggleTestRunning']
 })
 class Menu extends React.Component {
-
-	intervalId
-
-	constructor(props, context) {
-		super(props, context);
-
-		this.state = {
-			randomTogglingEnabled: false
-		};
-	};
-
-	startTest() {
-		this.setState({randomTogglingEnabled: true})
-		if (!this.state.randomTogglingEnabled) {
-			this.intervalId = setInterval(() => {
-				this.props.signals.nextItemToggled()
-			}, 0)
-		}
-	}
-
-	stopTest() {
-		this.setState({randomTogglingEnabled: false})
-		clearInterval(this.intervalId)
-	}
-
-	onCounterClick() {
-		this.props.signals.counterClicked()
-	}
-
 	render() {
+		const signals = this.props.signals;
+
 		return (
 			<menu>
 				React:
-				{ this.state.randomTogglingEnabled
-					? <button onClick={() => this.stopTest()}>Stop test</button>
-					: <button onClick={() => this.startTest()}>Start test</button> }
-				<button onClick={() =>  this.onCounterClick()}>Counter = { this.props.counter } </button>
+				{ this.props.toggleTestRunning
+					? <button onClick={() => signals.toggleTestStopped()}>Stop test</button>
+					: <button onClick={() => signals.toggleTestStarted()}>Start test</button> }
+				<button onClick={() => signals.counterClicked()}>Counter = { this.props.counter } </button>
 			</menu>
-		);
+		)
 	}
 }
 @Decorator()
@@ -66,12 +40,11 @@ class Item extends React.Component {
 })
 class List extends React.Component {
 	render() {
-		const signals = this.props.signals;
 		return (
 			<div>
 				{ this.props.items.map((item) => <Item key={item.id} item={item}></Item>) }
 			</div>
-		);
+		)
 	}
 }
 
