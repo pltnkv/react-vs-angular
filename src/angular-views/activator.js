@@ -9,22 +9,15 @@ function MenuComponent() {
 		controller: function ($scope, state, signals) {
 			state.inject($scope, {
 				counter: ['counter'],
-				toggleTestRunning: ['toggleTestRunning']
+				toggleTestRunning: ['toggleTestRunning'],
+				shiftTestRunning: ['shiftTestRunning']
 			})
 
-			let intervalId
-
-			$scope.startTest = () => {
-				signals.toggleTestStarted()
-			}
-			$scope.stopTest = () => {
-				signals.toggleTestStopped()
-			}
-
-			$scope.onCounterClicked = () => {
-				signals.counterClicked();
-				// debugger;
-			}
+			$scope.toggleTestStarted = signals.toggleTestStarted
+			$scope.toggleTestStopped = signals.toggleTestStopped
+			$scope.shiftTestStarted = signals.shiftTestStarted
+			$scope.shiftTestStopped = signals.shiftTestStopped
+			$scope.counterClicked = signals.counterClicked
 
 			$scope.$watch(() => {
 				// console.log('$watch')

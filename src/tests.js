@@ -12,18 +12,17 @@ module.exports.createTest = function createTest(testSignal, finishSignal, iterat
 						this.tick()
 					}, 0)
 				} else {
+					this.started = false
 					finishSignal()
-					this.stop()
 				}
 			}
 		},
 		start() {
-			console.log('s')
+
 			this.startTime = Date.now()
 			this.started = true
 			setTimeout(() => this.tick(), 0)
 		},
-
 		stop() {
 			alert((Date.now() - this.startTime) / 1000)
 			this.started = false

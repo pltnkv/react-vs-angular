@@ -15,8 +15,11 @@ class Menu extends React.Component {
 			<menu>
 				React:
 				{ this.props.toggleTestRunning
-					? <button onClick={() => signals.toggleTestStopped()}>Stop test</button>
-					: <button onClick={() => signals.toggleTestStarted()}>Start test</button> }
+					? <button onClick={() => signals.toggleTestStopped()}>Stop toggle test</button>
+					: <button onClick={() => signals.toggleTestStarted()}>Start toggle test</button> }
+				{ this.props.shiftTestRunning
+					? <button onClick={() => signals.shiftTestStopped()}>Stop shift test</button>
+					: <button onClick={() => signals.shiftTestStarted()}>Start shift test</button> }
 				<button onClick={() => signals.counterClicked()}>Counter = { this.props.counter } </button>
 			</menu>
 		)
@@ -45,6 +48,7 @@ class List extends React.Component {
 				{ this.props.items.map((item) => <Item key={item.id} item={item}></Item>) }
 			</div>
 		)
+
 	}
 }
 

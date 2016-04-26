@@ -12,7 +12,8 @@ let data = {
 	nextId: 0,
 	counter: 1,
 	items: itemsGenerator.get(),
-	toggleTestRunning: false
+	toggleTestRunning: false,
+	shiftTestRunning: false
 }
 
 let model = Model(data)
@@ -27,7 +28,6 @@ controller.addModules({
 
 function incrementCounter({state}) {
 	state.set('counter', state.get('counter') + 1)
-	// debugger;
 }
 
 function getRandomId({state, output}) {
@@ -60,6 +60,18 @@ function toggleItem({input, state}) {
 	state.set('items', newItems)
 }
 
+function shiftItem({input, state}) {
+	let itemPos = input.id
+	let items = state.get('items')
+	let newItems = [
+		...items.slice(0, itemPos),
+		items[itemPos + 1],
+		items[itemPos],
+		...items.slice(itemPos + 2)
+	]
+	state.set('items', newItems)
+}
+
 // tests
 let toggleTest
 
@@ -76,6 +88,20 @@ function stopToggleTest({state}) {
 	toggleTest.stop()
 }
 
+let shiftTest
+function startShiftTest({state}) {
+	state.set('shiftTestRunning', true)
+	let signals = controller.getSignals()
+	let itemsCount = state.get('items').length
+	shiftTest = tests.createTest(signals.nextItemShifted, signals.shiftTestStopped, itemsCount - 1)
+	shiftTest.start()
+}
+
+function stopShiftTest({state}) {
+	state.set('shiftTestRunning', false)
+	shiftTest.stop()
+}
+
 ////////////////////////////////////
 // SIGNALS
 ////////////////////////////////////
@@ -83,10 +109,11 @@ function stopToggleTest({state}) {
 controller.addSignals({
 	randomItemToggled: [getRandomId, toggleItem],
 	nextItemToggled: [getNextItemId, toggleItem],
+	nextItemShifted: [getNextItemId, shiftItem],
 	toggleTestStarted: [startToggleTest],
 	toggleTestStopped: [stopToggleTest],
-	shiftTestStarted: [],
-	shiftTestStopped: [],
+	shiftTestStarted: [startShiftTest],
+	shiftTestStopped: [stopShiftTest],
 	itemClicked: [toggleItem],
 	counterClicked: {
 		chain: [incrementCounter],

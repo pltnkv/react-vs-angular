@@ -1,6 +1,8 @@
 <div>
     Angular:
-    <button ng-click="startTest()" ng-hide="toggleTestRunning">Start test</button>
-    <button ng-click="stopTest()" ng-show="toggleTestRunning">Stop test</button>
-    <button ng-click="onCounterClicked()">Counter = {{ counter }}</button>
+    <button ng-click="toggleTestStarted()" ng-hide="toggleTestRunning">Start toggle test</button>
+    <button ng-click="toggleTestStopped()" ng-show="toggleTestRunning">Stop toggle test</button>
+    <button ng-click="shiftTestStarted()" ng-hide="shiftTestRunning">Start shift test</button>
+    <button ng-click="shiftTestStopped()" ng-show="shiftTestRunning">Stop shift test</button>
+    <button ng-click="counterClicked()">Counter = {{ counter }}</button>
 </div>
